@@ -5,10 +5,10 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import md5 from 'md5';
-import { validationResult } from 'express-validator'
-import { reset } from 'nodemon';
+import { body, validationResult } from 'express-validator'
 
 dotenv.config();
+
 
 const register = asyncHandler(async (req, res) => {
 
@@ -26,20 +26,29 @@ const register = asyncHandler(async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
     let confirmPassword = req.body.confirm_password;
+    db.connect();
+    const checkUser = await db.query(`select * from users where email = "${email}"`);
 
-    const checkUser = await db.query(`select * from users where email = ${email}`);
-
-    if (checkUser.length > 0) {
-        res.status(403);
-        throw new Error('Email Is Already Registered');
+    if (checkUser) {
+        res.send({
+            success: false,
+            code: 403,
+            message: 'Email Is Already Registered',
+            body: '',
+        });
     }
-    name.trim();
-    email.trim();
     let verifToken = md5(name) + md5(email);
     password = bcrypt.hashSync(password.trim(), 10);
 
-    const registered = await db.query(`insert into users (name, email, password, verif_token) values(${name}, ${email}, ${password}, ${verifToken})`);
-
+    const registered = await db.query("insert into users (name, email, password, verif_token, status) values(?,?,?,?,1)", [
+        name,
+        email,
+        password,
+        verifToken
+    ]);
+    console.log(checkUser);
+    console.log("Insert" + registered);
+    db.end()
     return res.json({
         success: true,
         code: 200,
@@ -54,19 +63,54 @@ const login = asyncHandler(async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
 
-    const result = await db.query(`select * from users where email=${email}`);
-    if (result.length > 0) {
-        let user = result[0];
-
-        const match = await bcrypt.compare(password, user.password);
-        if (!match) {
-            res.status(404);
-            throw new Error('Email or password is invalid');
+    const result = await db.query("select * from users where email=?", [
+        email
+    ], (err, result) => {
+        if (err) {
+            res.send({
+                success: false,
+                code: 400,
+                message: err,
+                body: ''
+            });
         }
+        const user = result[0];
+        bcrypt.compare(password, user.password, (err, data) => {
 
-        delete user.password;
+            if (err) {
+                res.send({
+                    success: false,
+                    code: 404,
+                    message: err,
+                    body: ''
+                });
+            }
+            if (data) {
+                delete user.password;
 
-    }
+                const token = jwt.sign({
+                    "id": user.id,
+                    "email": user.email,
+                    "name": user.name
+                }, process.env.JWT_SECRET);
+
+                return res.json({
+                    success: true,
+                    code: 200,
+                    message: 'login success',
+                    data: { ...user, access_token: token }
+                });
+            } else {
+                res.send({
+                    success: false,
+                    code: 404,
+                    message: 'Email or password is invalid',
+                    body: ''
+                });
+            }
+        });
+    });
 });
+
 
 export { register, login };

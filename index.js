@@ -6,6 +6,7 @@ import mainRouter from './routes/mainRouter.js';
 import authRouter from './routes/authRouter.js';
 import cors from 'cors';
 
+// console.log(db.connect());
 
 const app = express();
 app.use(express.json());
@@ -14,7 +15,6 @@ app.use(cors());
 
 app.use('/', authRouter, mainRouter);
 
-console.log(db.user, db.password);
 
 app.get('/about', (req, res) => res.send('Express is Express'));
 app.listen(process.env.PORT, () => console.log(`Hello World app berjalan di http://localhost:${process.env.PORT}`));
