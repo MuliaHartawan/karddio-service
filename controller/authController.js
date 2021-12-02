@@ -1,4 +1,3 @@
-import express, { response } from 'express';
 import asyncHandler from 'express-async-handler';
 import db from '../config/database.js';
 import bcrypt from 'bcryptjs';
@@ -46,8 +45,6 @@ const register = asyncHandler(async (req, res) => {
         password,
         verifToken
     ]);
-    console.log(checkUser);
-    console.log("Insert" + registered);
     db.end()
     return res.json({
         success: true,

@@ -6,14 +6,12 @@ import mainRouter from './routes/mainRouter.js';
 import authRouter from './routes/authRouter.js';
 import cors from 'cors';
 
-// console.log(db.connect());
-
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.use('/', authRouter, mainRouter);
+app.use('/api', authRouter, mainRouter);
 
 
 app.get('/about', (req, res) => res.send('Express is Express'));
