@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import db from '../config/database.js';
 import dotenv, { config } from 'dotenv';
+import model from '../model/index.js'
 
 dotenv.config();
 
@@ -104,15 +105,16 @@ const updateGoal = asyncHandler(async (req, res) => {
 const getProfile = asyncHandler(async (req, res) => {
     try {
         const auth = req.user_login;
-
-        const [profile] = await db.query('select * from users where id = ?', auth.id);
-
-        return res.status(200).send({
-            succes: true,
-            code: 200,
-            message: "Result data!",
-            body: profile[0]
-        })
+        console.log(auth);
+        await db.model.findAll()
+            .then((profile) => {
+                return res.status(200).send({
+                    succes: true,
+                    code: 200,
+                    message: "Result data!",
+                    body: profile
+                })
+            });
     } catch (error) {
         return res.status(500).send({
             succes: false,
@@ -123,19 +125,29 @@ const getProfile = asyncHandler(async (req, res) => {
     }
 });
 
-const game = asyncHandler(async (req, res) => {
-    try {
+const gamePlaying = asyncHandler(async (req, res) => {
+    // try {
 
-    } catch (error) {
-        return res.status(500).send({
-            succes: false,
-            code: 500,
-            message: error.message,
-            body: ''
-        });
-    }
+    // } catch (error) {
+    //     return res.status(500).send({
+    //         succes: false,
+    //         code: 500,
+    //         message: error.message,
+    //         body: ''
+    //     });
+    // }
+
+    return console.log("Game Playing")
 });
 
-export { dashboard, identify, updateGoal, getProfile, game };
+const gameComplete = asyncHandler(async (req, res) => {
+    return console.log("Game Complete");
+});
+
+const workout = asyncHandler(async (req, res) => {
+
+});
+
+export { dashboard, identify, updateGoal, getProfile, gamePlaying, gameComplete, workout };
 
 
