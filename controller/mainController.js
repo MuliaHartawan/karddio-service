@@ -61,17 +61,13 @@ const dashboard = asyncHandler(async (req, res) => {
 const identify = asyncHandler(async (req, res) => {
     try {
         const auth = req.user_login;
-        const goal = req.body.goal;
-        const age = req.body.age;
-        const height = req.body.height;
-        const weight = req.body.weight;
-        const sex = req.body.sex;
-
+        const { goal, age, height, weight, sex } = req.body;
+        //kurang insert tabel goals
         await model.user.update({
-            age: age,
-            height: height,
-            weight: weight,
-            sex: sex
+            age,
+            height,
+            weight,
+            sex
         }, {
             where: {
                 id: auth.id
@@ -107,11 +103,11 @@ const identify = asyncHandler(async (req, res) => {
 const updateGoal = asyncHandler(async (req, res) => {
     try {
         const auth = req.user_login;
-        const weight = req.body.weight;
-        const goals = req.body.goal
-        //kurang insert goals di table hoas
+        const { weight, goal } = req.body;
+
+        //kurang insert goals di table goals
         await model.user.update({
-            weight: weight
+            weight
         }, {
             where: {
                 id: auth.id

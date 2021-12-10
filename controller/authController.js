@@ -22,10 +22,7 @@ const register = asyncHandler(async (req, res) => {
             });
         }
 
-        let name = req.body.name;
-        let email = req.body.email;
-        let password = req.body.password;
-        let confirmPassword = req.body.confirm_password;
+        const { name, email, password, confirm_password } = req.body;
         await model.user.findAll({
             where: {
                 email: email
@@ -46,10 +43,10 @@ const register = asyncHandler(async (req, res) => {
         password = bcrypt.hashSync(password.trim(), 10);
 
         await model.user.create({
-            name: name,
-            email: email,
-            password: password,
-            verif_token: verifToken
+            name,
+            email,
+            password,
+            verif_token
         })
             .then(user => {
                 return res.status(200).send({
@@ -74,13 +71,12 @@ const register = asyncHandler(async (req, res) => {
 });
 
 const login = asyncHandler(async (req, res) => {
-    let email = req.body.email;
-    let password = req.body.password;
+    const { email, password } = req.body;
 
     await model.user.findAll({
         attributes: ['id', 'email', 'name', 'password'],
         where: {
-            email: email
+            email
         }
     })
         .then(result => {
