@@ -148,7 +148,7 @@ const getProfile = asyncHandler(async (req, res) => {
                     code: 200,
                     message: "Result data!",
                     body: profile
-                })
+                });
             });
     } catch (error) {
         return res.status(500).send({
@@ -183,6 +183,27 @@ const workout = asyncHandler(async (req, res) => {
 
 });
 
-export { dashboard, identify, updateGoal, getProfile, gamePlaying, gameComplete, workout };
+const listGoal = asyncHandler(async (req, res) => {
+    try {
+        await model.goal.findAll()
+            .then(goal => {
+                return res.status(200).send({
+                    succes: true,
+                    code: 200,
+                    message: "Result data!",
+                    body: goal
+                })
+            })
+    } catch (error) {
+        return res.status(500).send({
+            succes: false,
+            code: 500,
+            message: error.message,
+            body: ''
+        });
+    }
+});
+
+export { dashboard, identify, updateGoal, getProfile, gamePlaying, gameComplete, workout, listGoal };
 
 

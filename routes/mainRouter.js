@@ -7,7 +7,8 @@ import {
     getProfile,
     gameComplete,
     gamePlaying,
-    workout
+    workout,
+    listGoal
 } from '../controller/mainController.js';
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.put('/goal', [jwtTokenMiddleware], updateGoal);
 router.get('/profile', [jwtTokenMiddleware], getProfile);
 router.get('/start-workout', [jwtTokenMiddleware], gamePlaying);
 router.post('/start-workout', [jwtTokenMiddleware], gameComplete);
+router.get('/list-goal', [jwtTokenMiddleware], listGoal);
 
 export default router;

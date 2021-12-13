@@ -14,13 +14,13 @@ const leaderboard = db.define('leaderbords', {
     timestamps: true
 });
 
-leaderboard.hasMany(user, { foreignKey: 'user_id' });
-leaderboard.belongTo(user, { foreignKey: 'user_id' });
 
-leaderboard.hasMany(goal, { foreignKey: 'goal_id' });
-leaderboard.belongTo(goal, { foreignKey: 'goal_id' });
+leaderboard.belongsTo(user, { foreignKey: 'user_id' });
 
-leaderboard.hasMany(rule, { foreignKey: 'rule_id' });
-leaderboard.belongTo(rule, { foreignKey: 'rule_id' });
+leaderboard.belongsTo(goal, { foreignKey: 'goal_id' });
+
+leaderboard.belongsTo(rule, { foreignKey: 'rule_id' });
+
+
 
 export default leaderboard;
