@@ -24,8 +24,8 @@ const dashboard = asyncHandler(async (req, res) => {
             }
         })
             .then(indentifNotyExist => {
-                console.log(indentifNotyExist.length)
-                if (indentifNotyExist.length > 0) {
+                console.log(indentifNotyExist);
+                if (!indentifNotyExist) {
                     res.status(403).send({
                         succes: true,
                         code: 403,

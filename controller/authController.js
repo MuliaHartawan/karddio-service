@@ -22,7 +22,7 @@ const register = asyncHandler(async (req, res) => {
             });
         }
 
-        const { name, email, password, confirm_password } = req.body;
+        let { name, email, password, confirm_password } = req.body;
         await model.user.findAll({
             where: {
                 email: email
@@ -38,15 +38,16 @@ const register = asyncHandler(async (req, res) => {
                     });
                 }
             })
-
-        let verifToken = md5(name) + md5(email);
+        const verif_token = md5(name) + md5(email);
         password = bcrypt.hashSync(password.trim(), 10);
 
+        console.log(verif_token, email);
         await model.user.create({
             name,
             email,
             password,
-            verif_token
+            verif_token,
+            status: 1
         })
             .then(user => {
                 return res.status(200).send({
@@ -80,7 +81,9 @@ const login = asyncHandler(async (req, res) => {
         }
     })
         .then(result => {
-            const user = result[0];
+            // console.log(result[0]);
+            let user = result[0];
+            // console.log(user);
             bcrypt.compare(password, user.password, (err, data) => {
                 if (err) {
                     res.send({
@@ -91,7 +94,8 @@ const login = asyncHandler(async (req, res) => {
                     });
                 }
                 if (data) {
-                    delete user.password;
+                    console.log(user.email);
+                    delete user.dataValues.password;
 
                     const token = jwt.sign({
                         "id": user.id,
