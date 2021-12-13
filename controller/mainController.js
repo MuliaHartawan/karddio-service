@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import dotenv, { config } from 'dotenv';
 import model from '../model/index.js'
 import Op from 'sequelize';
+import leaderboard from '../model/leaderboard.js';
 
 dotenv.config();
 
@@ -140,7 +141,8 @@ const getProfile = asyncHandler(async (req, res) => {
     try {
         const auth = req.user_login;
         await model.user.findByPk(auth.id, {
-            attributes: ['name', 'email', 'status', 'age', 'sex', 'height', 'weight', 'createdAt', 'updatedAt']
+            attributes: ['name', 'email', 'status', 'age', 'sex', 'height', 'weight', 'createdAt', 'updatedAt'],
+            include: leaderboard
         })
             .then((profile) => {
                 return res.status(200).send({

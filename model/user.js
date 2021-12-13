@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
 import db from '../config/database.js';
+import goal from './goal.js';
 import leaderboard from './leaderboard.js';
 
 const user = db.define('users', {
@@ -16,8 +17,6 @@ const user = db.define('users', {
     timestamps: true
 });
 
-user.hasMany(leaderboard, { foreignKey: 'user_id' });
-// user.hasMany(leaderboard, {through : });
-// user.belongsToMany()
+user.belongsToMany(goal, { through: leaderboard });
 
 export default user;

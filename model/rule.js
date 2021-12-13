@@ -1,6 +1,5 @@
 import Sequelize from "sequelize";
 import db from "../config/database.js";
-import leaderboard from "./leaderboard.js";
 
 const rule = db.define('rules', {
     name: Sequelize.STRING,
@@ -12,7 +11,5 @@ const rule = db.define('rules', {
 }, {
     timestamps: true
 });
-
-rule.hasMany(leaderboard, { foreignKey: 'rule_id' });
 
 export default rule;
