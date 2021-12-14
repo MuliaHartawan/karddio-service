@@ -1,7 +1,6 @@
 import Sequelize from "sequelize";
 import db from "../config/database.js";
 import leaderboard from "./leaderboard.js";
-import user from "./user.js";
 
 const goal = db.define('goals', {
     name: Sequelize.STRING,
@@ -10,6 +9,12 @@ const goal = db.define('goals', {
     timestamps: false
 });
 
-goal.belongsToMany(user, { through: leaderboard });
+// goal.belongsToMany(user, { through: leaderboard });
+goal.associate = (models) => {
+    goal.belongsToMany(models.user, {
+        through: models.leaderboard,
+        foreignKey: 'goal_id',
+    })
+}
 
 export default goal;

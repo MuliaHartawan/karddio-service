@@ -2,7 +2,10 @@ import asyncHandler from 'express-async-handler';
 import dotenv, { config } from 'dotenv';
 import model from '../model/index.js'
 import Op from 'sequelize';
-import leaderboard from '../model/leaderboard.js';
+import { body, validationResult } from 'express-validator'
+
+
+import goal from '../model/goal.js';
 
 dotenv.config();
 
@@ -61,10 +64,22 @@ const dashboard = asyncHandler(async (req, res) => {
 
 const identify = asyncHandler(async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).send({
+                success: false,
+                code: 400,
+                message: errors.array().map(({ msg }) => msg),
+                body: '',
+            });
+        }
         const auth = req.user_login;
-        const { goal, age, height, weight, sex } = req.body;
+        const { age, height, weight, sex, goal_id } = req.body;
+        const rule_id = 1;
+        const user_id = auth.id;
+        const point = 0
         //kurang insert tabel goals
-        await model.user.update({
+        const user = await model.user.update({
             age,
             height,
             weight,
@@ -73,23 +88,30 @@ const identify = asyncHandler(async (req, res) => {
             where: {
                 id: auth.id
             }
-        })
-            .then(result => {
-                if (result.length > 0) {
-                    return res.status(200).send({
-                        succes: true,
-                        code: 200,
-                        message: "Data Identify add successfully",
-                        body: {
-                            'age': age,
-                            'height': height,
-                            'weight': weight,
-                            'gender': sex,
-                            'goal': goal
-                        }
-                    });
+        });
+
+        const leaderboard = await model.leaderboard.create({
+            goal_id,
+            user_id,
+            rule_id,
+            point
+        });
+        console.log("user" + user);
+        console.log("leaderboar" + leaderboard);
+        if (user && leaderboard) {
+            return res.status(200).send({
+                succes: true,
+                code: 200,
+                message: "Data Identify add successfully",
+                body: {
+                    'age': age,
+                    'height': height,
+                    'weight': weight,
+                    'gender': sex,
+                    'goal': goal
                 }
             });
+        }
     } catch (error) {
         return res.status(500).send({
             succes: false,
@@ -142,7 +164,11 @@ const getProfile = asyncHandler(async (req, res) => {
         const auth = req.user_login;
         await model.user.findByPk(auth.id, {
             attributes: ['name', 'email', 'status', 'age', 'sex', 'height', 'weight', 'createdAt', 'updatedAt'],
-            include: leaderboard
+            include: [{
+                model: goal,
+                required: true,
+                attributes: ['name', 'description']
+            }]
         })
             .then((profile) => {
                 return res.status(200).send({
@@ -174,7 +200,7 @@ const gamePlaying = asyncHandler(async (req, res) => {
     //     });
     // }
 
-    return console.log("Game Playing")
+    return console.log(req.user_login.id)
 });
 
 const gameComplete = asyncHandler(async (req, res) => {
@@ -189,6 +215,7 @@ const listGoal = asyncHandler(async (req, res) => {
     try {
         await model.goal.findAll()
             .then(goal => {
+
                 return res.status(200).send({
                     succes: true,
                     code: 200,

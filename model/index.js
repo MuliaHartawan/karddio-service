@@ -6,7 +6,7 @@ import workout from './workout.js';
 
 const model = {};
 
-model.leaderbord = leaderboard;
+model.leaderboard = leaderboard;
 model.goal = goal;
 model.rule = rule;
 model.user = user;
