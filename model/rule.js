@@ -9,7 +9,7 @@ const rule = db.define('rules', {
     duration_workout: Sequelize.INTEGER,
     duration_relaxing: Sequelize.INTEGER,
 }, {
-    timestamps: true
+    timestamps: false
 });
 
 export default rule;

@@ -3,6 +3,7 @@ import dotenv, { config } from 'dotenv';
 import model from '../model/index.js'
 import Op from 'sequelize';
 import goal from '../model/goal.js';
+import rule from '../model/rule.js';
 import { validationResult } from 'express-validator'
 
 
@@ -191,7 +192,7 @@ const getProfile = asyncHandler(async (req, res) => {
         const auth = req.user_login;
         await model.user.findByPk(auth.id, {
             attributes: ['name', 'email', 'status', 'age', 'sex', 'height', 'weight', 'createdAt', 'updatedAt'],
-            include: goal
+            include: [goal, rule]
         })
             .then((profile) => {
                 return res.status(200).send({
@@ -212,18 +213,35 @@ const getProfile = asyncHandler(async (req, res) => {
 });
 
 const gamePlaying = asyncHandler(async (req, res) => {
-    // try {
-
-    // } catch (error) {
-    //     return res.status(500).send({
-    //         succes: false,
-    //         code: 500,
-    //         message: error.message,
-    //         body: ''
-    //     });
-    // }
-
-    return console.log(req.user_login.id)
+    try {
+        const auth = req.user_login;
+        const leaderboard = await model.user.findAll({
+            attributes: ['name'],
+            include: [{
+                model: goal,
+                attributes: { exclude: ['id'] }
+            }, {
+                model: rule,
+                attributes: { exclude: ['id'] }
+            }],
+            where: {
+                id: auth.id
+            }
+        })
+        return res.status(200).send({
+            succes: true,
+            code: 200,
+            message: "Result data!",
+            body: leaderboard[0]
+        });
+    } catch (error) {
+        return res.status(500).send({
+            succes: false,
+            code: 500,
+            message: error.message,
+            body: ''
+        });
+    }
 });
 
 const gameComplete = asyncHandler(async (req, res) => {
@@ -231,6 +249,24 @@ const gameComplete = asyncHandler(async (req, res) => {
 });
 
 const workout = asyncHandler(async (req, res) => {
+    try {
+        await model.workout.findAll()
+            .then(workout => {
+                return res.status(200).send({
+                    succes: true,
+                    code: 200,
+                    message: "Result data!",
+                    body: workout
+                })
+            })
+    } catch (error) {
+        return res.status(500).send({
+            succes: false,
+            code: 500,
+            message: error.message,
+            body: ''
+        });
+    }
 
 });
 
@@ -256,6 +292,10 @@ const listGoal = asyncHandler(async (req, res) => {
     }
 });
 
-export { dashboard, identify, updateGoal, getProfile, gamePlaying, gameComplete, workout, listGoal };
+const finalReport = asyncHandler(async (req, res) => {
+
+});
+
+export { dashboard, identify, updateGoal, getProfile, gamePlaying, gameComplete, workout, listGoal, finalReport };
 
 

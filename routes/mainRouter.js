@@ -37,5 +37,6 @@ router.get('/profile', [jwtTokenMiddleware], getProfile);
 router.get('/start-workout', [jwtTokenMiddleware], gamePlaying);
 router.post('/start-workout', [jwtTokenMiddleware], gameComplete);
 router.get('/list-goal', [jwtTokenMiddleware], listGoal);
+router.get('/list-workout', [jwtTokenMiddleware], workout);
 
 export default router;

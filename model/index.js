@@ -8,6 +8,9 @@ import workout from './workout.js';
 goal.belongsToMany(user, { through: leaderboard });
 user.belongsToMany(goal, { through: leaderboard });
 
+rule.belongsToMany(user, { through: leaderboard });
+user.belongsToMany(rule, { through: leaderboard });
+
 const model = {};
 
 model.leaderboard = leaderboard;
