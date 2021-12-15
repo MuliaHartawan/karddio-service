@@ -17,6 +17,4 @@ const user = db.define('users', {
     timestamps: true
 });
 
-user.belongsToMany(goal, { through: leaderboard });
-
 export default user;

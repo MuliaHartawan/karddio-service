@@ -4,6 +4,10 @@ import rule from './rule.js';
 import user from './user.js';
 import workout from './workout.js';
 
+
+goal.belongsToMany(user, { through: leaderboard });
+user.belongsToMany(goal, { through: leaderboard });
+
 const model = {};
 
 model.leaderbord = leaderboard;
