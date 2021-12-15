@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import dotenv, { config } from 'dotenv';
 import model from '../model/index.js'
 import Op from 'sequelize';
-import { body, validationResult } from 'express-validator'
+import { body, check, validationResult } from 'express-validator'
 
 
 import goal from '../model/goal.js';
@@ -12,32 +12,30 @@ dotenv.config();
 const dashboard = asyncHandler(async (req, res) => {
     try {
         const auth = req.user_login;
-        await model.user.findAll({
+        const indentifNotyExist = await model.user.findAll({
             attributes: ['age', 'height', 'sex', 'weight'],
             where: {
                 id: auth.id,
                 age: {
-                    [Op.eq]: 0
+                    [Op.not]: 0
                 },
                 height: {
-                    [Op.eq]: 0
+                    [Op.not]: 0
                 },
                 weight: {
-                    [Op.eq]: 0
+                    [Op.not]: 0
                 }
             }
         })
-            .then(indentifNotyExist => {
-                console.log(indentifNotyExist);
-                if (!indentifNotyExist) {
-                    res.status(403).send({
-                        succes: true,
-                        code: 403,
-                        message: 'Your account has not set a goal, please set to fill in the goal',
-                        body: '',
-                    });
-                }
+        console.log(indentifNotyExist);
+        if (indentifNotyExist.length > 0) {
+            res.status(403).send({
+                succes: true,
+                code: 403,
+                message: 'Your account has not set a goal, please set to fill in the goal',
+                body: '',
             });
+        }
         await model.user.findAll({
             attributes: ['name', 'email', 'status', 'age', 'sex', 'height', 'weight', 'createdAt', 'updatedAt'],
             where: {
@@ -73,12 +71,29 @@ const identify = asyncHandler(async (req, res) => {
                 body: '',
             });
         }
+
         const auth = req.user_login;
         const { age, height, weight, sex, goal_id } = req.body;
         const rule_id = 1;
         const user_id = auth.id;
         const point = 0
-        //kurang insert tabel goals
+        const status = 1
+
+        //cek apakah user sudah pernah mengisi form identifikasi
+        const check = await model.leaderboard.findAll({
+            where: {
+                user_id: user_id
+            }
+        })
+        if (check.length > 0) {
+            return res.status(405).send({
+                succes: true,
+                code: 405,
+                message: "Ooops! You Have Entered Data Identify",
+                body: ""
+            });
+        }
+
         const user = await model.user.update({
             age,
             height,
@@ -94,10 +109,9 @@ const identify = asyncHandler(async (req, res) => {
             goal_id,
             user_id,
             rule_id,
-            point
+            point,
+            status
         });
-        console.log("user" + user);
-        console.log("leaderboar" + leaderboard);
         if (user && leaderboard) {
             return res.status(200).send({
                 succes: true,
@@ -108,7 +122,7 @@ const identify = asyncHandler(async (req, res) => {
                     'height': height,
                     'weight': weight,
                     'gender': sex,
-                    'goal': goal
+                    'goal': goal_id
                 }
             });
         }
@@ -120,35 +134,48 @@ const identify = asyncHandler(async (req, res) => {
             body: ''
         });
     }
-
 });
 
 const updateGoal = asyncHandler(async (req, res) => {
     try {
         const auth = req.user_login;
-        const { weight, goal } = req.body;
+        const { weight, goal_id } = req.body;
 
-        //kurang insert goals di table goals
-        await model.user.update({
-            weight
-        }, {
-            where: {
-                id: auth.id
-            }
-        })
-            .then(goal => {
-                if (goal.length > 0) {
-                    return res.status(200).send({
-                        succes: true,
-                        code: 200,
-                        message: "Update goal successfully",
-                        body: {
-                            'weight': weight,
-                            'goal': goals
-                        }
-                    });
+        const user = await model.user.update({ weight }, {
+            where: { id: auth.id }
+        });
+
+        const [leaderboard, created] = await model.leaderboard.findOrCreate({
+            where: { user_id: auth.id, goal_id: goal_id },
+            defaults: { rule_id: 1, point: 0, status: 1 }
+        });
+        if (user && leaderboard) {
+
+            const checkLeaderboard = await model.leaderboard.findAll({
+                where: {
+                    user_id: auth.id, goal_id: goal_id, status: 1
                 }
             });
+            if (checkLeaderboard) {
+                await model.leaderboard.update(
+                    { status: 0 }, {
+                    where: { user_id: auth.id }
+                });
+                await model.leaderboard.update(
+                    { status: 1 }, {
+                    where: { user_id: auth.id, goal_id: goal_id }
+                });
+                return res.status(200).send({
+                    succes: true,
+                    code: 200,
+                    message: "Update goal successfully",
+                    body: {
+                        'weight': weight,
+                        'goal': leaderboard.goal_id
+                    }
+                });
+            }
+        }
     } catch (error) {
         return res.status(500).send({
             succes: false,
