@@ -1,7 +1,5 @@
 import Sequelize from 'sequelize';
 import db from '../config/database.js';
-import goal from './goal.js';
-import leaderboard from './leaderboard.js';
 
 const user = db.define('users', {
     name: Sequelize.STRING,

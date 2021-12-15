@@ -10,14 +10,6 @@ const jwtTokenMiddleware = (req, res, next) => {
     const token = bearer[1];
 
     if (!token) {
-        // res.send({
-        //     success: false,
-        //     code: 401,
-        //     message: 'Unauthorized',
-        //     body: ''
-        // });
-
-        // return next();
         res.status(401);
         return next(new Error('unauthorized'));
     }
