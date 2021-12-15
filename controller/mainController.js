@@ -2,10 +2,10 @@ import asyncHandler from 'express-async-handler';
 import dotenv, { config } from 'dotenv';
 import model from '../model/index.js'
 import Op from 'sequelize';
-import { body, check, validationResult } from 'express-validator'
-
-
 import goal from '../model/goal.js';
+import { validationResult } from 'express-validator'
+
+
 
 dotenv.config();
 
@@ -191,11 +191,7 @@ const getProfile = asyncHandler(async (req, res) => {
         const auth = req.user_login;
         await model.user.findByPk(auth.id, {
             attributes: ['name', 'email', 'status', 'age', 'sex', 'height', 'weight', 'createdAt', 'updatedAt'],
-            include: [{
-                model: goal,
-                required: true,
-                attributes: ['name', 'description']
-            }]
+            include: goal
         })
             .then((profile) => {
                 return res.status(200).send({

@@ -2,9 +2,9 @@ import Sequelize from "sequelize";
 import db from "../config/database.js";
 
 const leaderboard = db.define('leaderboards', {
-    goal_id: Sequelize.INTEGER,
-    user_id: Sequelize.INTEGER,
-    rule_id: Sequelize.INTEGER,
+    goalId: Sequelize.INTEGER,
+    userId: Sequelize.INTEGER,
+    ruleId: Sequelize.INTEGER,
     point: Sequelize.INTEGER,
     status: Sequelize.TINYINT,
 }, {

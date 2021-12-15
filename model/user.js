@@ -15,16 +15,4 @@ const user = db.define('users', {
     timestamps: true
 });
 
-// user.belongsToMany(goal, { through: leaderboard });
-// user.associate = (models) => {
-//     user.hasMany(models.leaderboard, { foreignkey: 'user_id' });
-// }
-
-user.associate = (models) => {
-    user.belongsToMany(models.goal, {
-        through: models.leaderboard,
-        foreignKey: 'user_id',
-    })
-}
-
 export default user;
