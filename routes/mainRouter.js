@@ -8,7 +8,8 @@ import {
     gameComplete,
     gamePlaying,
     workout,
-    listGoal
+    listGoal,
+    finalReport
 } from '../controller/mainController.js';
 import { body } from 'express-validator';
 const router = express.Router();
@@ -36,6 +37,7 @@ router.put('/goal', [jwtTokenMiddleware], updateGoal);
 router.get('/profile', [jwtTokenMiddleware], getProfile);
 router.get('/start-workout', [jwtTokenMiddleware], gamePlaying);
 router.post('/start-workout', [jwtTokenMiddleware], gameComplete);
+router.get('/final-report', [jwtTokenMiddleware], finalReport);
 router.get('/list-goal', [jwtTokenMiddleware], listGoal);
 router.get('/list-workout', [jwtTokenMiddleware], workout);
 

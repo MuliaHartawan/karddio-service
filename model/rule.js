@@ -3,6 +3,7 @@ import db from "../config/database.js";
 
 const rule = db.define('rules', {
     name: Sequelize.STRING,
+    goalId: Sequelize.INTEGER,
     description: Sequelize.TEXT,
     point: Sequelize.INTEGER,
     duration_stretching: Sequelize.INTEGER,

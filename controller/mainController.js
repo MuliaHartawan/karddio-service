@@ -245,7 +245,38 @@ const gamePlaying = asyncHandler(async (req, res) => {
 });
 
 const gameComplete = asyncHandler(async (req, res) => {
-    return console.log("Game Complete");
+    try {
+        const auth = req.user_login;
+        const leaderboard = await model.leaderboard.findAll({ where: { userId: auth.id } })
+            .then(leaderboard => {
+                // const rules = await model.rule.findAll({ where: { goalId: leaderboard.goalId } })
+                //     .then(rules => {
+
+                //     })
+                //     .catch(error => {
+
+                //     })
+
+            })
+            .catch(error => {
+                console.log(error);
+            })
+
+        console.log(leaderboard, rule);
+        // rules.forEach(element => {
+        //     if (element.point == leaderboard.point) {
+
+        //     }
+        // });
+        return res.status(200).send({
+            succes: true,
+            code: 200,
+            message: "Result data!",
+            body: rules
+        });
+    } catch (error) {
+
+    }
 });
 
 const workout = asyncHandler(async (req, res) => {
@@ -293,7 +324,32 @@ const listGoal = asyncHandler(async (req, res) => {
 });
 
 const finalReport = asyncHandler(async (req, res) => {
-
+    try {
+        const auth = req.user_login;
+        const user = await model.user.findAll({
+            attributes: ['weight'],
+            include: [{
+                model: rule,
+                attributes: ['duration_workout']
+            },
+            {
+                model: goal,
+            }]
+        })
+        return res.status(200).send({
+            succes: true,
+            code: 200,
+            message: "Result data!",
+            body: user
+        })
+    } catch (error) {
+        return res.status(500).send({
+            succes: false,
+            code: 500,
+            message: error.message,
+            body: ''
+        });
+    }
 });
 
 export { dashboard, identify, updateGoal, getProfile, gamePlaying, gameComplete, workout, listGoal, finalReport };

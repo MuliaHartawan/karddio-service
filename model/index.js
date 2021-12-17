@@ -11,6 +11,9 @@ user.belongsToMany(goal, { through: leaderboard });
 rule.belongsToMany(user, { through: leaderboard });
 user.belongsToMany(rule, { through: leaderboard });
 
+goal.hasMany(rule);
+rule.belongsTo(goal);
+
 const model = {};
 
 model.leaderboard = leaderboard;
