@@ -19,7 +19,7 @@ router.post('/register',
         .notEmpty()
         .withMessage('Password is required')
         .isLength({ min: 8 })
-        .withMessage('name must be at least 8 chars long'),
+        .withMessage('Password must be at least 8 chars long'),
     body('confirm_password')
         .notEmpty()
         .withMessage('Confirm password is required')
@@ -36,9 +36,7 @@ router.post('/login',
         .withMessage('Email field must have format email'),
     body('password')
         .notEmpty()
-        .withMessage('Password is required')
-        .isLength({ min: 8 })
-        .withMessage('name must be at least 8 chars long'),
+        .withMessage('Password is required'),
     login
 );
 

@@ -72,6 +72,17 @@ const register = asyncHandler(async (req, res) => {
 });
 
 const login = asyncHandler(async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).send({
+                success: false,
+                code: 400,
+                message: errors.array().map(({ msg }) => msg),
+                body: '',
+            });
+        }
+        
     const { email, password } = req.body;
 
     await model.user.findAll({
@@ -119,6 +130,14 @@ const login = asyncHandler(async (req, res) => {
                 }
             });
         });
+    }
+    catch (error){
+        return res.status(500).send({
+            success: false,
+            code: 500,
+            message: error.message,
+        });
+    }
 });
 
 
