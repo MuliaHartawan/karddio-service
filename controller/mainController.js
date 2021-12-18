@@ -249,29 +249,14 @@ const gameComplete = asyncHandler(async (req, res) => {
         const auth = req.user_login;
         const leaderboard = await model.leaderboard.findAll({ where: { userId: auth.id } });
         const rules = await model.rule.findAll({ where: { goalId: leaderboard.goalId } })
-            .then(leaderboard => {
-
-            })
-            .catch(error => {
-
-            })
-
-        // .catch(error => {
-        //     console.log(error);
-        // })
-
-        console.log(leaderboard, rule);
-        // rules.forEach(element => {
-        //     if (element.point == leaderboard.point) {
-
-        //     }
-        // });
-        return res.status(200).send({
+        const response = await res.status(200).send({
             succes: true,
             code: 200,
             message: "Result data!",
             body: rules
         });
+        console.log(leaderboard, rule);
+        return response;
     } catch (error) {
 
     }
