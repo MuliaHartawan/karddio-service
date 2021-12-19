@@ -7,7 +7,6 @@ import rule from '../model/rule.js';
 import { validationResult } from 'express-validator'
 
 
-
 dotenv.config();
 
 const dashboard = asyncHandler(async (req, res) => {
@@ -248,17 +247,7 @@ const gameComplete = asyncHandler(async (req, res) => {
     try {
         const auth = req.user_login;
         const leaderboard = await model.leaderboard.findAll({ where: { userId: auth.id } });
-        const rules = await model.rule.findAll({ where: { goalId: leaderboard.goalId } })
-            .then(leaderboard => {
-
-            })
-            .catch(error => {
-
-            })
-
-        // .catch(error => {
-        //     console.log(error);
-        // })
+        const rules = await model.rule.findAll({ where: { goalId: leaderboard[0].goalId } });
 
         console.log(leaderboard, rule);
         // rules.forEach(element => {
@@ -273,7 +262,12 @@ const gameComplete = asyncHandler(async (req, res) => {
             body: rules
         });
     } catch (error) {
-
+        return res.status(500).send({
+            succes: false,
+            code: 500,
+            message: error.message,
+            body: ''
+        });
     }
 });
 
