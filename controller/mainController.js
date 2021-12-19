@@ -246,21 +246,23 @@ const gamePlaying = asyncHandler(async (req, res) => {
 const gameComplete = asyncHandler(async (req, res) => {
     try {
         const auth = req.user_login;
-        const leaderboard = await model.leaderboard.findAll({ where: { userId: auth.id } });
+        const leaderboard = await model.leaderboard.findAll({ where: { userId: auth.id, status: 1 } });
         const rules = await model.rule.findAll({ where: { goalId: leaderboard[0].goalId } });
 
-        console.log(leaderboard, rule);
-        // rules.forEach(element => {
-        //     if (element.point == leaderboard.point) {
-
-        //     }
-        // });
-        return res.status(200).send({
-            succes: true,
-            code: 200,
-            message: "Result data!",
-            body: rules
-        });
+        const pointCurrent = leaderboard[0].point
+        const point = pointCurrent + 100;
+        await model.leaderboard.update({ point }, { where: { userId: auth.id, status: 1 } });
+        for (let i = 0; i < rules.length; i++) {
+            if (rules[i].point == leaderboard[0].point && rules[i].goalId == leaderboard[0].goalId) {
+                await model.leaderboard.update({ ruleId: rules[i].id }, { where: { userId: auth.id, status: 1 } });
+                return res.status(200).send({
+                    succes: true,
+                    code: 200,
+                    message: "Congratulations you have successfully advanced to the next level",
+                    body: ''
+                });
+            }
+        }
     } catch (error) {
         return res.status(500).send({
             succes: false,

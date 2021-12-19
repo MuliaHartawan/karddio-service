@@ -18,16 +18,22 @@ router.get('/', [jwtTokenMiddleware], dashboard);
 router.post('/identify',
     body('age')
         .notEmpty()
-        .withMessage('Age is required'),
+        .withMessage('Age is required')
+        .isInt()
+        .withMessage('Age must be a number'),
     body('sex')
         .notEmpty()
         .withMessage('Sex is required'),
     body('height')
         .notEmpty()
-        .withMessage('Height is required'),
+        .withMessage('Height is required')
+        .isInt()
+        .withMessage('Height must be a number'),
     body('weight')
         .notEmpty()
-        .withMessage('Weight is required'),
+        .withMessage('Weight is required')
+        .isInt()
+        .withMessage('Weight must be a number'),
     body('goal_id')
         .notEmpty()
         .withMessage('Goal is required'),
