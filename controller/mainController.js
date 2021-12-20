@@ -94,10 +94,10 @@ const identify = asyncHandler(async (req, res) => {
       height,
       weight,
       sex,
-      goal_id
+      goalId
     } = req.body;
-    const rule_id = 1;
-    const user_id = auth.id;
+    const ruleId = 1;
+    const userId = auth.id;
     const point = 0;
     const status = 1;
 
@@ -271,17 +271,17 @@ const gamePlaying = asyncHandler(async (req, res) => {
     const leaderboard = await model.user.findAll({
       attributes: ["name"],
       include: [{
-        model: goal,
-        attributes: {
-          exclude: ["id"],
+          model: goal,
+          attributes: {
+            exclude: ["id"],
+          },
         },
-      },
-      {
-        model: rule,
-        attributes: {
-          exclude: ["id"],
+        {
+          model: rule,
+          attributes: {
+            exclude: ["id"],
+          },
         },
-      },
       ],
       where: {
         id: auth.id,
@@ -317,22 +317,19 @@ const gameComplete = asyncHandler(async (req, res) => {
         goalId: leaderboard[0].goalId,
       },
     });
-
+    console.log(rules.length)
     const pointCurrent = leaderboard[0].point;
     const point = pointCurrent + 100;
     await model.leaderboard.update({
-      point,
+      point
     }, {
       where: {
         userId: auth.id,
         status: 1,
-      },
+      }
     });
     for (let i = 0; i < rules.length; i++) {
-      if (
-        rules[i].point == leaderboard[0].point &&
-        rules[i].goalId == leaderboard[0].goalId
-      ) {
+      if (rules[i].point == leaderboard[0].point && rules[i].goalId == leaderboard[0].goalId) {
         await model.leaderboard.update({
           ruleId: rules[i].id,
         }, {
@@ -345,6 +342,22 @@ const gameComplete = asyncHandler(async (req, res) => {
           succes: true,
           code: 200,
           message: "Congratulations you have successfully advanced to the next level",
+          body: "",
+        });
+      }
+      if (leaderboard[0].point > rules[rules.length - 1].point) {
+        await model.leaderboard.update({
+          point: pointCurrent
+        }, {
+          where: {
+            userId: auth.id,
+            status: 1,
+          }
+        });
+        return res.status(200).send({
+          succes: true,
+          code: 200,
+          message: "Congrats you are at the highest level in this goal",
           body: "",
         });
       }
@@ -405,12 +418,12 @@ const finalReport = asyncHandler(async (req, res) => {
     const user = await model.user.findAll({
       attributes: ["weight"],
       include: [{
-        model: rule,
-        attributes: ["duration_workout"],
-      },
-      {
-        model: goal,
-      },
+          model: rule,
+          attributes: ["duration_workout"],
+        },
+        {
+          model: goal,
+        },
       ],
     });
     return res.status(200).send({
