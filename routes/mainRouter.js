@@ -34,7 +34,7 @@ router.post('/identify',
         .withMessage('Weight is required')
         .isInt()
         .withMessage('Weight must be a number'),
-    body('goal_id')
+    body('goalId')
         .notEmpty()
         .withMessage('Goal is required'),
     [jwtTokenMiddleware],
