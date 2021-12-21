@@ -49,19 +49,33 @@ const dashboard = asyncHandler(async (req, res) => {
           "sex",
           "height",
           "weight",
-          "createdAt",
-          "updatedAt",
         ],
         where: {
           id: auth.id,
         },
         include: [goal, rule],
-      })
+      });
+    const leaderboard = await model.leaderboard.findAll({
+      attributes: ['id'],
+      where: {
+        userId: auth.id,
+        status: 1,
+      },
+    });
+    const historyPoint = await model.history.findAll({
+      attributes: ['point', 'createdAt'],
+      where: {
+        leaderboardId: leaderboard[0].id
+      }
+    })
     return res.status(200).send({
       succes: true,
       code: 200,
       message: "Result data!",
-      body: user[0]
+      body: {
+        users: user[0],
+        history_point: historyPoint
+      }
     });
 
   } catch (error) {
@@ -426,7 +440,7 @@ const finalReport = asyncHandler(async (req, res) => {
       attributes: ["weight"],
       include: [{
           model: rule,
-          attributes: ["duration_workout"],
+          attributes: ["duration_workout", "burn_calories", "need_calories"],
         },
         {
           model: goal,
@@ -437,7 +451,7 @@ const finalReport = asyncHandler(async (req, res) => {
       succes: true,
       code: 200,
       message: "Result data!",
-      body: user,
+      body: user[0],
     });
   } catch (error) {
     return res.status(500).send({
