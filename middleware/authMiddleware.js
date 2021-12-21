@@ -19,8 +19,6 @@ const jwtTokenMiddleware = (req, res, next) => {
         req.user_login = user_login
         return next();
     } catch (error) {
-        // res.status(200);
-        // return next(new Error(error.message));
         res.send({
             success: false,
             code: 401,
