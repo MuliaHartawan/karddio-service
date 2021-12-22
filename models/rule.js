@@ -9,6 +9,8 @@ const rule = db.define('rules', {
     duration_stretching: Sequelize.INTEGER,
     duration_workout: Sequelize.INTEGER,
     duration_relaxing: Sequelize.INTEGER,
+    need_calories: Sequelize.INTEGER,
+    burn_calories: Sequelize.INTEGER
 }, {
     timestamps: false
 });

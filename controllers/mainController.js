@@ -118,7 +118,7 @@ const identify = asyncHandler(async (req, res) => {
     //cek apakah user sudah pernah mengisi form identifikasi
     const check = await model.leaderboard.findAll({
       where: {
-        userId: user_id,
+        userId: userId,
       },
     });
     if (check.length > 0) {
