@@ -25,7 +25,6 @@ const jwtTokenMiddleware = (req, res, next) => {
             message: 'Unauthorized',
             body: ''
         });
-
         return next();
     }
 }
