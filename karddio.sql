@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 21 Des 2021 pada 16.37
--- Versi server: 10.4.20-MariaDB
--- Versi PHP: 7.4.22
+-- Generation Time: Dec 23, 2021 at 03:08 PM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 7.3.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `goals`
+-- Table structure for table `goals`
 --
 
 CREATE TABLE `goals` (
@@ -34,7 +34,7 @@ CREATE TABLE `goals` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `goals`
+-- Dumping data for table `goals`
 --
 
 INSERT INTO `goals` (`id`, `name`, `description`) VALUES
@@ -45,7 +45,7 @@ INSERT INTO `goals` (`id`, `name`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `history_points`
+-- Table structure for table `history_points`
 --
 
 CREATE TABLE `history_points` (
@@ -57,10 +57,25 @@ CREATE TABLE `history_points` (
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `history_points`
+--
+
+INSERT INTO `history_points` (`id`, `userId`, `leaderboardId`, `point`, `createdAt`, `updatedAt`) VALUES
+(1, 2, 2, 100, '2021-12-21 16:28:56', '2021-12-21 16:28:56'),
+(2, 2, 2, 200, '2021-12-21 16:29:51', '2021-12-21 16:29:51'),
+(3, 2, 2, 300, '2021-12-21 16:42:01', '2021-12-21 16:42:01'),
+(4, 2, 2, 400, '2021-12-22 14:09:22', '2021-12-22 14:09:22'),
+(5, 2, 2, 500, '2021-12-22 14:20:04', '2021-12-22 14:20:04'),
+(6, 2, 2, 600, '2021-12-22 15:04:10', '2021-12-22 15:04:10'),
+(7, 2, 2, 700, '2021-12-22 15:05:44', '2021-12-22 15:05:44'),
+(8, 2, 2, 800, '2021-12-22 15:30:24', '2021-12-22 15:30:24'),
+(9, 2, 2, 900, '2021-12-23 13:48:07', '2021-12-23 13:48:07');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `leaderboards`
+-- Table structure for table `leaderboards`
 --
 
 CREATE TABLE `leaderboards` (
@@ -75,16 +90,18 @@ CREATE TABLE `leaderboards` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `leaderboards`
+-- Dumping data for table `leaderboards`
 --
 
 INSERT INTO `leaderboards` (`id`, `goalId`, `userId`, `ruleId`, `point`, `status`, `createdAt`, `updatedAt`) VALUES
-(1, 2, 1, 12, 0, 1, '2021-12-15 06:50:25', '2021-12-21 09:28:20');
+(1, 2, 1, 12, 0, 1, '2021-12-15 06:50:25', '2021-12-21 09:28:20'),
+(2, 1, 2, 9, 900, 0, '2021-12-21 16:27:16', '2021-12-23 13:48:17'),
+(3, 2, 2, 1, 0, 1, '2021-12-23 13:48:17', '2021-12-23 13:48:17');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `rules`
+-- Table structure for table `rules`
 --
 
 CREATE TABLE `rules` (
@@ -101,18 +118,18 @@ CREATE TABLE `rules` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `rules`
+-- Dumping data for table `rules`
 --
 
 INSERT INTO `rules` (`id`, `goalId`, `name`, `description`, `point`, `duration_stretching`, `duration_workout`, `duration_relaxing`, `need_calories`, `burn_calories`) VALUES
-(1, 1, 'level 1', '', 0, 5, 5, 5, NULL, NULL),
+(1, 1, 'level 1', '', 0, 5, 5, 5, 1500, 700),
 (2, 1, 'level 2', '', 100, 5, 7, 5, NULL, NULL),
-(3, 1, 'level 3', '', 200, 5, 9, 5, NULL, NULL),
-(4, 1, 'level 4', '', 300, 5, 11, 5, NULL, NULL),
+(3, 1, 'level 3', '', 200, 5, 9, 5, 1500, 700),
+(4, 1, 'level 4', '', 300, 5, 11, 5, 2500, 900),
 (5, 1, 'level 5', '', 400, 5, 13, 5, NULL, NULL),
 (6, 1, 'level 6', '', 500, 5, 15, 5, NULL, NULL),
-(7, 1, 'level 7', '', 600, 5, 17, 5, NULL, NULL),
-(8, 1, 'level 8', '', 700, 5, 19, 5, NULL, NULL),
+(7, 1, 'level 7', '', 600, 5, 17, 5, 1750, 900),
+(8, 1, 'level 8', '', 700, 5, 19, 5, 3200, 500),
 (9, 1, 'level 9', '', 800, 5, 21, 5, NULL, NULL),
 (10, 1, 'level 10', '', 900, 5, 23, 5, NULL, NULL),
 (11, 2, 'level 1', '', 0, 10, 6, 10, NULL, NULL),
@@ -129,7 +146,7 @@ INSERT INTO `rules` (`id`, `goalId`, `name`, `description`, `point`, `duration_s
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -150,16 +167,17 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `password`, `email`, `status`, `avatar`, `verif_token`, `age`, `sex`, `height`, `weight`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
-(1, 'Mulia Hartawan Negara', '$2a$10$iJM0mKciASIqtAAtkPADmOpyQv4OsXHqQm5GdbKyHifYzm5OhGcQ.', 'mulia.hartawan011@gmail.com', 1, NULL, '0fe6e6b06e66bbc6d5cc4d1b7421eb0df656085951856d7f578904967130399c', 12, 'male', 123, 34, '2021-12-14 03:58:21', '2021-12-15 06:50:25', NULL);
+(1, 'Mulia Hartawan Negara', '$2a$10$iJM0mKciASIqtAAtkPADmOpyQv4OsXHqQm5GdbKyHifYzm5OhGcQ.', 'mulia.hartawan011@gmail.com', 1, NULL, '0fe6e6b06e66bbc6d5cc4d1b7421eb0df656085951856d7f578904967130399c', 12, 'male', 123, 34, '2021-12-14 03:58:21', '2021-12-15 06:50:25', NULL),
+(2, 'nama orang', '$2a$10$K6TZBynlJ6Q6vWexps2dKORR.TvWP2TawYn3Oi3aaGVyJh0AjX0Hq', 'sadas@gmail.com', 1, NULL, '48f08729f99a5fce8b65ccc933ea754c48c7a89615edb7e3551319d9e6255394', 25, 'male', 175, 75, '2021-12-21 16:24:22', '2021-12-23 13:48:17', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `workouts`
+-- Table structure for table `workouts`
 --
 
 CREATE TABLE `workouts` (
@@ -170,7 +188,7 @@ CREATE TABLE `workouts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data untuk tabel `workouts`
+-- Dumping data for table `workouts`
 --
 
 INSERT INTO `workouts` (`id`, `name`, `description`, `picture`) VALUES
@@ -183,19 +201,19 @@ INSERT INTO `workouts` (`id`, `name`, `description`, `picture`) VALUES
 --
 
 --
--- Indeks untuk tabel `goals`
+-- Indexes for table `goals`
 --
 ALTER TABLE `goals`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `history_points`
+-- Indexes for table `history_points`
 --
 ALTER TABLE `history_points`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `leaderboards`
+-- Indexes for table `leaderboards`
 --
 ALTER TABLE `leaderboards`
   ADD PRIMARY KEY (`id`),
@@ -204,70 +222,70 @@ ALTER TABLE `leaderboards`
   ADD KEY `rule_id` (`ruleId`);
 
 --
--- Indeks untuk tabel `rules`
+-- Indexes for table `rules`
 --
 ALTER TABLE `rules`
   ADD PRIMARY KEY (`id`),
   ADD KEY `ruleId` (`goalId`);
 
 --
--- Indeks untuk tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `workouts`
+-- Indexes for table `workouts`
 --
 ALTER TABLE `workouts`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `goals`
+-- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `history_points`
+-- AUTO_INCREMENT for table `history_points`
 --
 ALTER TABLE `history_points`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT untuk tabel `leaderboards`
+-- AUTO_INCREMENT for table `leaderboards`
 --
 ALTER TABLE `leaderboards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `rules`
+-- AUTO_INCREMENT for table `rules`
 --
 ALTER TABLE `rules`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT untuk tabel `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `workouts`
+-- AUTO_INCREMENT for table `workouts`
 --
 ALTER TABLE `workouts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `leaderboards`
+-- Constraints for table `leaderboards`
 --
 ALTER TABLE `leaderboards`
   ADD CONSTRAINT `leaderboards_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`),
