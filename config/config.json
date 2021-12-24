@@ -1,0 +1,26 @@
+{
+    "development": {
+        "username" : "root",
+        "password" : null,
+        "database" : "karddio",
+        "host" : "localhost",
+        "dialect" : "mysql",
+        "operatorAliases" : "false"
+    },
+    "test": {
+        "username" : "root",
+        "password" : null,
+        "database" : "karddio",
+        "host" : "localhost",
+        "dialect" : "mysql",
+        "operatorAliases" : "false"
+    },
+    "production": {
+        "username" : "root",
+        "password" : null,
+        "database" : "karddio",
+        "host" : "localhost",
+        "dialect" : "mysql",
+        "operatorAliases" : "false"
+    }
+}
